@@ -1,0 +1,146 @@
+#include <LiquidCrystal.h>
+
+// LCD Pins
+LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
+
+// Sensor Pins
+int s1 = 2;
+int s2 = 3;
+int s3 = 4;
+int s4 = 5;
+
+// RGB LED Pins
+// SLOT 1
+int red1 = A0;
+int green1 = A1;
+
+// SLOT 2
+int red2 = A2;
+int green2 = A3;
+
+// SLOT 3
+int red3 = A4;
+int green3 = A5;
+
+// SLOT 4
+int red4 = 6;
+int green4 = 13;
+
+void setup() {
+
+  // Sensor Input
+  pinMode(s1, INPUT_PULLUP);
+  pinMode(s2, INPUT_PULLUP);
+  pinMode(s3, INPUT_PULLUP);
+  pinMode(s4, INPUT_PULLUP);
+
+  // RGB Output
+  pinMode(red1, OUTPUT);
+  pinMode(green1, OUTPUT);
+
+  pinMode(red2, OUTPUT);
+  pinMode(green2, OUTPUT);
+
+  pinMode(red3, OUTPUT);
+  pinMode(green3, OUTPUT);
+
+  pinMode(red4, OUTPUT);
+  pinMode(green4, OUTPUT);
+
+  // LCD Start
+  lcd.begin(16, 2);
+
+  lcd.setCursor(0,0);
+  lcd.print("SMART PARKING");
+
+  lcd.setCursor(0,1);
+  lcd.print("SYSTEM START");
+
+  delay(2000);
+  lcd.clear();
+}
+
+void loop() {
+
+  int available = 0;
+
+  // SLOT 1
+  if (digitalRead(s1) == HIGH) {
+
+    // EMPTY = GREEN
+    digitalWrite(green1, LOW);
+    digitalWrite(red1, HIGH);
+
+    available++;
+
+  } else {
+
+    // OCCUPIED = RED
+    digitalWrite(green1, HIGH);
+    digitalWrite(red1, LOW);
+  }
+
+  // SLOT 2
+  if (digitalRead(s2) == HIGH) {
+
+    digitalWrite(green2, LOW);
+    digitalWrite(red2, HIGH);
+
+    available++;
+
+  } else {
+
+    digitalWrite(green2, HIGH);
+    digitalWrite(red2, LOW);
+  }
+
+  // SLOT 3
+  if (digitalRead(s3) == HIGH) {
+
+    digitalWrite(green3, LOW);
+    digitalWrite(red3, HIGH);
+
+    available++;
+
+  } else {
+
+    digitalWrite(green3, HIGH);
+    digitalWrite(red3, LOW);
+  }
+
+  // SLOT 4
+  if (digitalRead(s4) == HIGH) {
+
+    digitalWrite(green4, LOW);
+    digitalWrite(red4, HIGH);
+
+    available++;
+
+  } else {
+
+    digitalWrite(green4, HIGH);
+    digitalWrite(red4, LOW);
+  }
+
+  // LCD Display
+  lcd.clear();
+
+  if (available == 0) {
+
+    lcd.setCursor(0,0);
+    lcd.print("PARKING FULL");
+
+    lcd.setCursor(0,1);
+    lcd.print("WAIT...");
+
+  } else {
+
+    lcd.setCursor(0,0);
+    lcd.print("Available:");
+
+    lcd.setCursor(0,1);
+    lcd.print(available);
+  }
+
+  delay(500);
+}
